@@ -33,7 +33,7 @@ public class ImageGraphics {
         int toCenterCard = coorTo.getSlutxval()+((coorTo.getSlutxval() - coorTo.getStartxval())/2);
 
 
-        String path = "testing/"; // SKAL RETTES
+        String path = "/home/s172133/src/"; // SKAL RETTES
 
         File arrowOne = null;
         File arrowTwo = null;

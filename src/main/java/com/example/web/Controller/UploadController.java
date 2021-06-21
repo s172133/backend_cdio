@@ -1,11 +1,7 @@
 package com.example.web.Controller;
 
-import com.example.web.Algorithm.card;
 import com.example.web.Algorithm.retString;
-import com.example.web.ImageProcess.ImageCompression;
-import com.example.web.ImageProcess.ImageGraphics;
-import com.example.web.ImageProcess.ImageProcessing;
-import com.example.web.ImageProcess.Kort;
+import com.example.web.ImageProcess.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +28,9 @@ public class UploadController {
 
     @Autowired
     private StatefulGame Game;
+
+    @Autowired
+    private javaToPy J2P;
 
     // TESTING GET
     @GetMapping(value="/")
@@ -130,38 +129,32 @@ public class UploadController {
     @PostMapping("/upload/{id}")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable int id) {
 
+
         // DELETE previous
         storageService.deleteAll(id);
         storageService.store(file, id);
 
         // IMAGE PROCESSING
         long start = System.currentTimeMillis();
-            ImageProcessing processing = new ImageProcessing();
-            try {
-                processing.Manipulation(storageService, id);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        ImageProcessor ip = new ImageProcessor("/home/s172133/", J2P);
+        Returnvalues ret = new Returnvalues();
+        try {
+            ret = ip.process("/home/s172133/upload-dir/"+id+"/"+file.getOriginalFilename());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Game.returnGameArray(id).addAll(ret.kortList);
+
+
         long end = System.currentTimeMillis();
         long elapsedTime = end - start;
-
         System.out.println("Image processing took: "+elapsedTime+"ms");
 
 
-        // IMAGE COMPRESSION
-        start = System.currentTimeMillis();
-            ImageCompression compression = new ImageCompression();
-            try {
-                compression.compress(id);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        end = System.currentTimeMillis();
-        elapsedTime = end - start;
-        System.out.println("Image compression took: "+elapsedTime+"ms");
 
         // ALGORITHM
-        String input = "1S,10D,1C_QH,KH,8H,5H,6C,5C,8S_E,E,E,E";
+        String input = ret.Tobias;
         retString response = null;
         try {
             response = Game.get(id).update(input);
@@ -169,35 +162,10 @@ public class UploadController {
             e.printStackTrace();
         }
 
-        // -------------------------------------Skal væk---------------------------------------------
-        // DEMO VALUES
-        Kort random = new Kort(130,400,230,600,3,4);
-        Kort random2 = new Kort(230,400,360,600,3,4);
-        Kort random3 = new Kort(360,400,490,600,3,4);
-        Kort random4 = new Kort(490,400,620,600,3,4);
-        Kort random5 = new Kort(620,400,750,600,3,4);
-        Kort random8 = new Kort(230,200,600,600,3,4);
-        //Kort random9 = new Kort(330,200,600,600,3,4);
-        Kort fromKort = new Kort(130,200,880,400,3,4);
-        Kort toKort = new Kort(750,400,600,600,3,4);
 
-        Kort random10 = new Kort(630,200,600,600,3,4);
-        fromKort.setCiffer(1);
-        fromKort.setFarve('B');
-        toKort.setCiffer(2);
-        toKort.setFarve('C');
-        Game.returnGameArray(id).add(random);
-        Game.returnGameArray(id).add(random2);
-        Game.returnGameArray(id).add(random3);
-        Game.returnGameArray(id).add(random4);
-        Game.returnGameArray(id).add(random5);
-        Game.returnGameArray(id).add(random8);
-        //Game.returnGameArray(id).add(random9);
-        Game.returnGameArray(id).add(fromKort);
-        Game.returnGameArray(id).add(toKort);
-        Game.returnGameArray(id).add(random10);
+        // SKAL RETTES
+        //  "Træk nye kort."  "Spillet er vundet!"   "Spillet er tabt!"
 
-        // ----------------------------------------------------------------------------------------
 
         // FIND FROM AND TO CARDS(provided by algorithm)
         Kort foundFrom = Game.findInBlock(id, response.from.getColor(),  response.from.getVal());
@@ -217,6 +185,8 @@ public class UploadController {
             System.out.println("Not foundTo");
         }
 
+
+
         // SET ARROWS
         String  fromArrow = "";
         String  toArrow = "";
@@ -233,16 +203,30 @@ public class UploadController {
             toArrow = "DG";
         }
 
-
         // IMAGE GRAPHICS
         start = System.currentTimeMillis();
 
             ImageGraphics g = new ImageGraphics();
-            g.addString(id,fromKort,fromArrow,toKort, toArrow);
+            g.addString(id,foundFrom,fromArrow,foundTo,toArrow);
 
         end = System.currentTimeMillis();
         elapsedTime = end - start;
         System.out.println("Image graphic took: "+elapsedTime+"ms");
+
+
+        // IMAGE COMPRESSION
+        start = System.currentTimeMillis();
+        ImageCompression compression = new ImageCompression();
+        try {
+            compression.compress(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        end = System.currentTimeMillis();
+        elapsedTime = end - start;
+        System.out.println("Image compression took: "+elapsedTime+"ms");
+
+
 
 
         // RESPONSE REGARDING NEXT MOVE

@@ -13,14 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ImageProcessing {
+public class ImageProc {
 
-    public ImageProcessing(){
+    public ImageProc(){
     }
 
     public void Manipulation(StorageService storageService, Integer id) throws Exception {
 
         String dirLocation = "upload-dir/"+String.valueOf(id);
+
 
         List<File> files = Files.list(Paths.get(dirLocation))
                 .map(Path::toFile)
