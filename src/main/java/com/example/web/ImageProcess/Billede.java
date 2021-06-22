@@ -54,7 +54,6 @@ public class Billede {
         if(cond == 1) {
             Imgproc.dilate(canny, canny, new Mat(), new Point(-1, -1), 1, 1, new Scalar(0.01));
         }
-
         //Imgproc.findContours();
         return canny;
     }
@@ -143,7 +142,6 @@ public class Billede {
 
             }
         }
-
 
 
         this.displayImage(this.billed);
@@ -496,7 +494,10 @@ public class Billede {
 
     }
 
-    public String IDKort(Mat billede, Kort kort, String img_path, javaToPy coms)throws Exception{
+    public String IDKort(Mat billede,Kort kort,String img_path,javaToPy coms)throws Exception{
+
+
+
 
 
         //Vi

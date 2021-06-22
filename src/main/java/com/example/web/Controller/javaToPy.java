@@ -31,14 +31,19 @@ public class javaToPy {
     public static BufferedWriter out;
     public static Process py;
 
-    //private static final String pythonPath = "/home/s195170/anaconda3/envs/tensorflow/bin/python.py";
-    //private static final String pyProgramPath = "/home/s195170/Testversion/Predict.py";
-    private static final String pythonPath = "/home/s195170/anaconda3/envs/tensorflow/bin/python.py";
-    private static final String pyProgramPath = "C:\\Users\\Mikkel\\OneDrive - Danmarks Tekniske Universitet\\Skrivebord\\python.py";
-    private static final String imageFolderPath = "C:\\Users\\Mikkel\\OneDrive - Danmarks Tekniske Universitet\\Skrivebord\\Predict.py";
+    // Change, if path is not correct.
+    // LOCAL
+    /*
+    private static final String pythonPath = "python3";
+    private static final String pyProgramPath = "C:\\Users\\Bruger\\Desktop\\Testversion\\Predict.py";
+    private static final String imageFolderPath = "C:\\Users\\Bruger\\Desktop\\Testversion\\";
+    */
 
-    public javaToPy(){ startPy();
-    System.out.println("python started!");};
+    // SERVER
+    private static final String pythonPath = "/home/s195170/anaconda3/envs/tensorflow/bin/python";
+    private static final String pyProgramPath = " /home/s195170/Testversion/Predict.py";
+    private static final String imageFolderPath = "/home/s172133/upload-dir/";
+
 
     /**
      * Send param to Python program. First use is slow, but it speedsup on following requests.

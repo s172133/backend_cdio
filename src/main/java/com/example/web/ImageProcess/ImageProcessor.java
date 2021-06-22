@@ -1,9 +1,10 @@
 package com.example.web.ImageProcess;
 
 import com.example.web.Controller.javaToPy;
-import org.opencv.core.Core;
+
 import org.opencv.core.Mat;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -12,33 +13,41 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-
 public class ImageProcessor {
     private final String path;
-    private final javaToPy J2Pfinal;
+    private final javaToPy j2p;
     public Process py;
-    public ImageProcessor(String path, javaToPy python){
-        this.J2Pfinal = python;
+    public ImageProcessor(String path, javaToPy j2p){
+        this.j2p = j2p;
         this.path = path;
         py  = null;
+
+
+        try {
+            py = new ProcessBuilder().command("python3", "/home/s195170/Predict.py").start();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
     }
 
     public Returnvalues process(String image)throws Exception {
         String svar = "";
 
         //Load Opencv
-       //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-       System.load("/home/s195170/opencv/");
 
        //lav et billede objekt og indlæs billedet til Mat (som basically er en Matrix
 	 Billede img = new Billede();
 
         //FØLGENDE SKAL ÆNDRES
         Mat mat = img.IndlæsBillede(image);
-
+       // Imgproc.resize(mat,mat,new Size(1600,1200));
+        //Imgproc.cvtColor(mat,mat,Imgproc.COLOR_RGB2GRAY);
+        //Imgproc.GaussianBlur(mat,mat,new Size(1,1),0);
         //lav et kantfilter på billedet
         Mat canmat = img.cannyBillede(mat,33,100,1);
-        //udskriver billedet(brugt til test
 
 
         //find firkanter i billedet med areal på 500 og en højde på 200 alt mindre bliver ignoeret
@@ -53,14 +62,32 @@ public class ImageProcessor {
         //sorterer så det nederste kort i en række er det første kort i listen
         img.sorterFirkanter(img.blokList);
 
+        /*
+        //forløkke til debug
+        for (int i = 1; i < 8 ; i++) {
+            for (int j = 0; j < img.blokList[i].size(); j++) {
+            System.out.println("startval"+img.blokList[i].get(j).startxval+"slutval "+img.blokList[i].get(j).slutyval+"blok id "+j+"Højde "+img.blokList[i].get(j).højde);
+         }
+        }
+        */
         //vælg række og udskriv det nederste kort
        Mat tempmat = null;
 
         ArrayList <String> aceList = new ArrayList<>();
         ArrayList <String> bunkeList = new ArrayList<>();
+        //laves om til en for int val = 1 til 7
+       // while(true) {
+
+
+
+
+
+
+
 
 
         for (int val = 1; val <= 7 ; val++) {
+
 
 
             if (val != 0) {
@@ -90,7 +117,7 @@ public class ImageProcessor {
 
 
                             // String svar2 = ""+tempkort.ciffer+tempkort.farve;
-                            aceList.add(img.IDKort(img.blokList[val].get(0).Billede, tempkort,path,J2Pfinal));
+                            aceList.add(img.IDKort(img.blokList[val].get(0).Billede, tempkort,path,j2p));
                             img.aceList.add(tempkort);
                             //fjerner den øverste fra listen
                             img.blokList[val].remove(0);
@@ -119,7 +146,7 @@ public class ImageProcessor {
                             //id og skriv til svar
 
                             img.bunkeList.add(temp);
-                            bunkeList.add(img.IDKort(img.blokList[val].get(0).Billede, temp,path,J2Pfinal));
+                            bunkeList.add(img.IDKort(img.blokList[val].get(0).Billede, temp,path,j2p));
 
                             img.blokList[val].remove(0);
                         }
@@ -144,7 +171,7 @@ public class ImageProcessor {
 
                         }
                         Kort kort = new Kort(img.blokList[val].get(0).startxval, img.blokList[val].get(0).startyval, img.blokList[val].get(0).slutxval, img.blokList[val].get(0).slutyval, val, 1);
-                        svar += img.IDKort(tempmat, kort,path,J2Pfinal);
+                        svar += img.IDKort(tempmat, kort,path,j2p);
                         img.kortlist.add(kort);
                     }
                     else{

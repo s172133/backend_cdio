@@ -33,12 +33,11 @@ public class pythoncall {
     public String runpython(int valg, javaToPy coms) throws IOException, InterruptedException {
 
         String ret = "";
-
-
-
+        String path = System.getProperty("user.dir");
+        path += "/udklip.jpg";
+        System.out.println("runpython path: "+path);
             try {
-                ret = coms.communicate(valg,"udklip.jpg");
-                System.out.println("Ret: "+ret);
+                ret = coms.communicate(valg,path);
             }
             catch (Exception err) {
                 err.printStackTrace();

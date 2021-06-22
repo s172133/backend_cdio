@@ -134,6 +134,7 @@ public class UploadController {
         storageService.deleteAll(id);
         storageService.store(file, id);
 
+
         // IMAGE PROCESSING
         long start = System.currentTimeMillis();
         ImageProcessor ip = new ImageProcessor("/home/s172133/", J2P);
@@ -166,6 +167,7 @@ public class UploadController {
         // SKAL RETTES
         //  "Træk nye kort."  "Spillet er vundet!"   "Spillet er tabt!"
 
+        System.out.println(response.from.getVal());
 
         // FIND FROM AND TO CARDS(provided by algorithm)
         Kort foundFrom = Game.findInBlock(id, response.from.getColor(),  response.from.getVal());
@@ -203,6 +205,7 @@ public class UploadController {
             toArrow = "DG";
         }
 
+
         // IMAGE GRAPHICS
         start = System.currentTimeMillis();
 
@@ -215,16 +218,16 @@ public class UploadController {
 
 
         // IMAGE COMPRESSION
-        start = System.currentTimeMillis();
+        //start = System.currentTimeMillis();
         ImageCompression compression = new ImageCompression();
         try {
             compression.compress(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        end = System.currentTimeMillis();
-        elapsedTime = end - start;
-        System.out.println("Image compression took: "+elapsedTime+"ms");
+        //end = System.currentTimeMillis();
+        //elapsedTime = end - start;
+        //System.out.println("Image compression took: "+elapsedTime+"ms");
 
 
 
