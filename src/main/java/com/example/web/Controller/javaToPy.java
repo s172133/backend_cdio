@@ -32,7 +32,6 @@ public class javaToPy {
     public static Process py;
     private static String pythonPath;
     private static String pyProgramPath;
-    private static String slash;
 
     public javaToPy() throws Exception{
         if (IS_OS_WINDOWS) {
@@ -43,6 +42,7 @@ public class javaToPy {
             pythonPath = "/home/s195170/anaconda3/envs/tensorflow/bin/python";
             pyProgramPath = "/home/s195170/Testversion/Predict.py";
         }
+        System.out.println("    Python Started: pythonPath = "+ pythonPath +" - pyProgramPath = " + pyProgramPath);
         startPy();
     }
 
@@ -61,7 +61,6 @@ public class javaToPy {
 
     public static String pipe(int model, String image) throws Exception {
         String ret;
-        System.out.println(model + "," + image);
         out.write(model + "," + image + "\n" );
         out.flush();
         ret = inp.readLine();

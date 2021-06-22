@@ -143,10 +143,9 @@ public class UploadController {
                 slash = "\\";
                 path = "C:\\Users\\Bruger\\IdeaProjects\\backend_cdio-master\\upload-dir\\";
             } else {
-                path = "/home/s172133/upload-dir/";
+                path = "/home/s195170/upload-dir/";
                 slash = "/";
             }
-            System.out.println("    "+path + id + slash + file.getOriginalFilename());
             ret = ip.process(path + id + slash + file.getOriginalFilename());
         } catch (Exception e) {
             e.printStackTrace();

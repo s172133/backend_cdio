@@ -317,6 +317,7 @@ public class Billede {
         if (ciff < 60) {
             throw new Exception("PercentageError");
         }
+        System.out.println("    Model: "+ciffre+" - "+kolor);
     }
 
     public String IDKort(Mat billede, Kort kort, javaToPy coms) throws Exception {

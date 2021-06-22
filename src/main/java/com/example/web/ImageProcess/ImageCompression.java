@@ -24,7 +24,7 @@ public class ImageCompression {
             path = "C:\\Users\\Bruger\\IdeaProjects\\backend_cdio-master\\upload-dir\\";
             slash = "\\";
         } else {
-            path = "/home/s172133/upload-dir/";
+            path = "/home/s195170/upload-dir/";
             slash = "/";
         }
 

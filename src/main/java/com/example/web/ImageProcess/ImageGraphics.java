@@ -37,7 +37,7 @@ public class ImageGraphics {
             arrowPath = "C:\\Users\\Bruger\\IdeaProjects\\backend_cdio-master\\testing\\";
             slash = "\\";
         } else {
-            img_path = "/home/s172133/upload-dir/";
+            img_path = "/home/s195170/upload-dir/";
             arrowPath = "/home/s172133/src/";
             slash = "/";
         }

@@ -24,7 +24,6 @@ public class ImageProcessor {
 
         //FØLGENDE SKAL ÆNDRES
         Mat mat = img.IndlæsBillede(image);
-        System.out.println("    "+mat.depth());
         //Core.rotate(mat, mat, Core.ROTATE_90_COUNTERCLOCKWISE);
         //lav et kantfilter på billedet
         Mat canmat = img.cannyBillede(mat,33,100,1);
