@@ -3,6 +3,7 @@ package com.example.web.ImageProcess;
 import com.example.web.Controller.javaToPy;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,15 +12,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
-
 public class ImageProcessor {
-    private final String path;
     private final javaToPy J2Pfinal;
     public Process py;
-    public ImageProcessor(String path, javaToPy python){
+    public ImageProcessor(javaToPy python){
         this.J2Pfinal = python;
-        this.path = path;
         py  = null;
     }
 
@@ -27,15 +24,15 @@ public class ImageProcessor {
         String svar = "";
 
         //Load Opencv
-       //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-       System.load("/home/s195170/opencv/");
+        //nu.pattern.OpenCV.loadShared();
 
-       //lav et billede objekt og indlæs billedet til Mat (som basically er en Matrix
-	 Billede img = new Billede();
+        //lav et billede objekt og indlæs billedet til Mat (som basically er en Matrix
+	    Billede img = new Billede();
 
         //FØLGENDE SKAL ÆNDRES
         Mat mat = img.IndlæsBillede(image);
 
+        Core.rotate(mat, mat, Core.ROTATE_90_COUNTERCLOCKWISE);
         //lav et kantfilter på billedet
         Mat canmat = img.cannyBillede(mat,33,100,1);
         //udskriver billedet(brugt til test
@@ -54,17 +51,13 @@ public class ImageProcessor {
         img.sorterFirkanter(img.blokList);
 
         //vælg række og udskriv det nederste kort
-       Mat tempmat = null;
+        Mat tempmat = null;
 
         ArrayList <String> aceList = new ArrayList<>();
         ArrayList <String> bunkeList = new ArrayList<>();
 
-
         for (int val = 1; val <= 7 ; val++) {
-
-
             if (val != 0) {
-
                 if(img.blokList[val].size()==0){
                     if(val > 1 && val < 6){
                         aceList.add("");
@@ -75,22 +68,12 @@ public class ImageProcessor {
                     //ingen i den givne bunke, tilføj E til svarstring
                 }
                 else { //hvis der er fundet et kort i den givne søjle
-
                     if (val >= 1 && val <= 4) {
-
                         //hvis det er række 2 til 5 kan der være et es øverst, id denne først
-                        System.out.println("val er =" + val);
-                        System.out.println("Størrelse bloklist = " + img.blokList[val].size());
-
-
                         if (img.blokList[val].get(0).startyval<300) {
-
                             //tilføj svar på esset til identificer
                             Kort tempkort = new Kort(img.blokList[val].get(0).startxval, img.blokList[val].get(0).startyval, img.blokList[val].get(0).slutxval, img.blokList[val].get(0).slutyval, 0, val);
-
-
-                            // String svar2 = ""+tempkort.ciffer+tempkort.farve;
-                            aceList.add(img.IDKort(img.blokList[val].get(0).Billede, tempkort,path,J2Pfinal));
+                            aceList.add(img.IDKort(img.blokList[val].get(0).Billede, tempkort,J2Pfinal));
                             img.aceList.add(tempkort);
                             //fjerner den øverste fra listen
                             img.blokList[val].remove(0);
@@ -119,7 +102,7 @@ public class ImageProcessor {
                             //id og skriv til svar
 
                             img.bunkeList.add(temp);
-                            bunkeList.add(img.IDKort(img.blokList[val].get(0).Billede, temp,path,J2Pfinal));
+                            bunkeList.add(img.IDKort(img.blokList[val].get(0).Billede, temp,J2Pfinal));
 
                             img.blokList[val].remove(0);
                         }
@@ -144,7 +127,7 @@ public class ImageProcessor {
 
                         }
                         Kort kort = new Kort(img.blokList[val].get(0).startxval, img.blokList[val].get(0).startyval, img.blokList[val].get(0).slutxval, img.blokList[val].get(0).slutyval, val, 1);
-                        svar += img.IDKort(tempmat, kort,path,J2Pfinal);
+                        svar += img.IDKort(tempmat, kort,J2Pfinal);
                         img.kortlist.add(kort);
                     }
                     else{

@@ -5,7 +5,6 @@ import org.opencv.core.*;
 import org.opencv.core.Point;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +27,6 @@ public class Billede {
     List <Kort> kortlist = new ArrayList<Kort>();
 
     public Mat IndlæsBillede(String filnavn) {
-
 
         Imgcodecs imageCodecs = new Imgcodecs();
 
@@ -143,11 +141,6 @@ public class Billede {
 
             }
         }
-
-
-
-        this.displayImage(this.billed);
-
 
        /* for (MatOfPoint cont:contour ) {
             //Scalar color = new Scalar(rng.nextInt(256),rng.nextInt(256),rng.nextInt(256));
@@ -433,26 +426,13 @@ public class Billede {
                 tal='X';
             }
             kort.ciffer = tal;
-
-
-        //TODO genkend og skriv svar til kort objekt
-
-
-
-        //TODO genkend og skriv svar til kort objekt
-
-
-
-
     }
 
-    public void find4manuel(Mat udklip, Kort kort, String img_path, javaToPy coms)throws Exception{
+    public void find4manuel(Mat udklip, Kort kort, javaToPy coms)throws Exception{
 
         pythoncall pyth = new pythoncall();
-        this.GemBillede(udklip,img_path+"FindFirkanter/src/com/company/udklip.jpg");
-
+        this.GemBillede(udklip,"udklip.jpg");
         String kolor =  pyth.runpython(1,coms);
-        System.out.println("Farven er "+kolor);
         String[] far = kolor.split(" ");
         switch (far[0]){
             case "klor":
@@ -471,7 +451,7 @@ public class Billede {
 
             float percent = Float.parseFloat(far[1]);
 
-            if(percent <= 90){
+            if(percent <= 60){
 
             throw new Exception("PercentageError");
 
@@ -489,18 +469,16 @@ public class Billede {
             }
             kort.ciffer = tal;
             float ciff = Float.parseFloat(split[1]);
-            if(ciff < 90){
+            if(ciff < 60){
                 throw new Exception("PercentageError");
             }
-
-
     }
 
-    public String IDKort(Mat billede, Kort kort, String img_path, javaToPy coms)throws Exception{
+    public String IDKort(Mat billede, Kort kort, javaToPy coms)throws Exception{
 
 
         //Vi
-        this.find4manuel(billede,kort,img_path,coms);
+        this.find4manuel(billede,kort,coms);
 
         String cif = ""+kort.ciffer;
         if(kort.ciffer == 'X'){

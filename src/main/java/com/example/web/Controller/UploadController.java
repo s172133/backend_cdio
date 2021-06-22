@@ -136,15 +136,22 @@ public class UploadController {
 
         // IMAGE PROCESSING
         long start = System.currentTimeMillis();
-        ImageProcessor ip = new ImageProcessor("/home/s172133/", J2P);
+        ImageProcessor ip = new ImageProcessor(J2P);
         Returnvalues ret = new Returnvalues();
         try {
-            ret = ip.process("/home/s172133/upload-dir/"+id+"/"+file.getOriginalFilename());
+            //String path = "C:\\Users\\Bruger\\IdeaProjects\\backend_cdio-master\\upload-dir\\";
+            String path = "/home/s172133/upload-dir/";
+            ret = ip.process(path+1+"/IMG_20210611_124214.jpg");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Game.returnGameArray(id).addAll(ret.kortList);
+        System.out.println("    "+ret.kortList);
+        // FEJL HERE: Gme.returnGameArray not initialised when using Peters debug version.
+        for (Kort element: ret.kortList) {
+            Game.returnGameArray(id).add(element);
+            System.out.println("    "+ element.toString());
+        }
 
 
         long end = System.currentTimeMillis();

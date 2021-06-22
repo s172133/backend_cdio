@@ -31,11 +31,10 @@ public class javaToPy {
     public static BufferedWriter out;
     public static Process py;
 
-    //private static final String pythonPath = "/home/s195170/anaconda3/envs/tensorflow/bin/python.py";
-    //private static final String pyProgramPath = "/home/s195170/Testversion/Predict.py";
-    private static final String pythonPath = "/home/s195170/anaconda3/envs/tensorflow/bin/python.py";
-    private static final String pyProgramPath = "C:\\Users\\Mikkel\\OneDrive - Danmarks Tekniske Universitet\\Skrivebord\\python.py";
-    private static final String imageFolderPath = "C:\\Users\\Mikkel\\OneDrive - Danmarks Tekniske Universitet\\Skrivebord\\Predict.py";
+    private static final String pythonPath = "/home/s195170/anaconda3/envs/tensorflow/bin/python";
+    private static final String pyProgramPath = "/home/s195170/Testversion/Predict.py";
+    //private static final String pythonPath = "python";
+    //private static final String pyProgramPath = "C:\\Users\\Bruger\\Desktop\\Testversion\\Predict.py";
 
     public javaToPy(){ startPy();
     System.out.println("python started!");};
@@ -56,8 +55,8 @@ public class javaToPy {
     public static String pipe(int model, String image) {
         String ret = "";
         try {
-            System.out.println(model + "," + imageFolderPath + image);
-            out.write(model + "," + imageFolderPath + image + "\n" );
+            System.out.println(model + "," + image);
+            out.write(model + "," + image + "\n" );
             out.flush();
             ret = inp.readLine();
         }

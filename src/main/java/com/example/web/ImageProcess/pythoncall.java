@@ -2,50 +2,18 @@ package com.example.web.ImageProcess;
 
 import com.example.web.Controller.javaToPy;
 
-import java.io.*;
-import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.Executors;
-import java.util.function.Consumer;
-
-import static java.util.OptionalDouble.empty;
-
-
-public class pythoncall {
-
-
-    private static class StreamGobbler implements Runnable {
-        private InputStream inputStream;
-        private Consumer<String> consumer;
-
-        public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
-            this.inputStream = inputStream;
-            this.consumer = consumer;
-        }
-
-        @Override
-        public void run() {
-            new BufferedReader(new InputStreamReader(inputStream)).lines()
-                    .forEach(consumer);
-        }
-    }
-
-    public String runpython(int valg, javaToPy coms) throws IOException, InterruptedException {
-
+public class pythoncall
+{
+    public String runpython(int valg, javaToPy coms) throws Exception {
         String ret = "";
-
-
-
-            try {
-                ret = coms.communicate(valg,"udklip.jpg");
-                System.out.println("Ret: "+ret);
-            }
-            catch (Exception err) {
-                err.printStackTrace();
-            }
-
-       return ret;
-
+        String path = System.getProperty("user.dir");
+        System.out.println("    "+path+"\\udklip.jpg");
+        for (int i = 0 ; i < 3 ; i++) {
+            ret = coms.communicate(valg, path + "\\udklip.jpg");
+            if (ret != null) break;
+        }
+        System.out.println("Ret: "+ret);
+        return ret;
     }
 
 }
