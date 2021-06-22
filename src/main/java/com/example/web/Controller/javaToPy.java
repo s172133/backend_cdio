@@ -31,19 +31,12 @@ public class javaToPy {
     public static BufferedWriter out;
     public static Process py;
 
-    // Change, if path is not correct.
-    // LOCAL
-    /*
-    private static final String pythonPath = "python3";
-    private static final String pyProgramPath = "C:\\Users\\Bruger\\Desktop\\Testversion\\Predict.py";
-    private static final String imageFolderPath = "C:\\Users\\Bruger\\Desktop\\Testversion\\";
-    */
-
-    // SERVER
     private static final String pythonPath = "/home/s195170/anaconda3/envs/tensorflow/bin/python";
-    private static final String pyProgramPath = " /home/s195170/Testversion/Predict.py";
-    private static final String imageFolderPath = "/home/s172133/upload-dir/";
+    private static final String pyProgramPath = "/home/s195170/Testversion/Predict.py";
+    //private static final String pythonPath = "python";
+    //private static final String pyProgramPath = "C:\\Users\\Bruger\\Desktop\\Testversion\\Predict.py";
 
+    public javaToPy(){ startPy();};
 
     /**
      * Send param to Python program. First use is slow, but it speedsup on following requests.
@@ -61,12 +54,13 @@ public class javaToPy {
     public static String pipe(int model, String image) {
         String ret = "";
         try {
-            System.out.println(model + "," + imageFolderPath + image);
-            out.write(model + "," + imageFolderPath + image + "\n" );
+            System.out.println(model + "," + image);
+            out.write(model + "," + image + "\n" );
             out.flush();
             ret = inp.readLine();
         }
         catch (Exception err) {
+            System.out.println("Failed to output ret: ");
             err.printStackTrace();
         }
         if (ret == null){

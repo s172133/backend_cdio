@@ -134,16 +134,19 @@ public class UploadController {
         storageService.deleteAll(id);
         storageService.store(file, id);
 
+        System.out.println("GAME is : "+Game.numUsers());
 
         // IMAGE PROCESSING
         long start = System.currentTimeMillis();
-        ImageProcessor ip = new ImageProcessor("/home/s172133/", J2P);
+        ImageProcessor ip = new ImageProcessor(J2P);
         Returnvalues ret = new Returnvalues();
         try {
+            System.out.println(file.getOriginalFilename());
             ret = ip.process("/home/s172133/upload-dir/"+id+"/"+file.getOriginalFilename());
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
         Game.returnGameArray(id).addAll(ret.kortList);
 

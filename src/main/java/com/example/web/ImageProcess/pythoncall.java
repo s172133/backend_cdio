@@ -13,36 +13,17 @@ import static java.util.OptionalDouble.empty;
 
 public class pythoncall {
 
-
-    private static class StreamGobbler implements Runnable {
-        private InputStream inputStream;
-        private Consumer<String> consumer;
-
-        public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
-            this.inputStream = inputStream;
-            this.consumer = consumer;
-        }
-
-        @Override
-        public void run() {
-            new BufferedReader(new InputStreamReader(inputStream)).lines()
-                    .forEach(consumer);
-        }
-    }
-
-    public String runpython(int valg, javaToPy coms) throws IOException, InterruptedException {
+    public String runpython(int valg, javaToPy coms){
 
         String ret = "";
         String path = System.getProperty("user.dir");
         path += "/udklip.jpg";
         System.out.println("runpython path: "+path);
-            try {
-                ret = coms.communicate(valg,path);
-            }
-            catch (Exception err) {
-                err.printStackTrace();
-            }
-
+        for (int i = 0 ; i < 3 ; i++) {
+            ret = coms.communicate(valg, path);
+            if (ret != null) break;
+        }
+        System.out.println("Ret: "+ret);
        return ret;
 
     }
