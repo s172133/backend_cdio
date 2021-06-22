@@ -1,4 +1,8 @@
 package com.example.web.Algorithm;
+/*
+ * Name: Tobias Schwarze
+ * Nr.: s195170
+ */
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -156,7 +160,7 @@ public class solitaire {
                 myGameState.increaseSuitCount();
                 break;
             default:
-                printOut(); // Debug
+                //printOut(); // Debug
                 break;
         }
     }
@@ -222,7 +226,6 @@ public class solitaire {
         }
         //Cards in tableau stack
         getMoves(tableauStack.getTopCard(), -1, 0);
-        System.out.println(legalMovesList.toString());
         return legalMovesList;
     }
 

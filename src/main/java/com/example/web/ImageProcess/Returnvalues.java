@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Returnvalues {
     public String Tobias;
-    public List <Kort> kortList;
+    public ArrayList <Kort> kortList;
 
     public Returnvalues(String tobias, List <Kort> kortList){
         Tobias = tobias;

@@ -1,4 +1,8 @@
 package com.example.web.Algorithm;
+/*
+ * Name: Tobias Schwarze
+ * Nr.: s195170
+ */
 
 /**
  * State containing a snapshot of previously stack content.

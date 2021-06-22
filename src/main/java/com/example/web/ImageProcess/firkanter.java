@@ -2,9 +2,6 @@ package com.example.web.ImageProcess;
 
 import org.opencv.core.Mat;
 
-import java.util.Comparator;
-
-
 public class firkanter  {
     int startxval;
     int startyval;

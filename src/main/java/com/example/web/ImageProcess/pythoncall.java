@@ -2,30 +2,18 @@ package com.example.web.ImageProcess;
 
 import com.example.web.Controller.javaToPy;
 
-import java.io.*;
-import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.Executors;
-import java.util.function.Consumer;
-
-import static java.util.OptionalDouble.empty;
-
-
-public class pythoncall {
-
-    public String runpython(int valg, javaToPy coms){
-
+public class pythoncall
+{
+    public String runpython(int valg, javaToPy coms) throws Exception {
         String ret = "";
         String path = System.getProperty("user.dir");
-        path += "/udklip.jpg";
-        System.out.println("runpython path: "+path);
+        System.out.println("    "+path+"\\udklip.jpg");
         for (int i = 0 ; i < 3 ; i++) {
-            ret = coms.communicate(valg, path);
+            ret = coms.communicate(valg, path + "\\udklip.jpg");
             if (ret != null) break;
         }
         System.out.println("Ret: "+ret);
-       return ret;
-
+        return ret;
     }
 
 }
