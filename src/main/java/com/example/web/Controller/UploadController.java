@@ -139,10 +139,11 @@ public class UploadController {
         ImageProcessor ip = new ImageProcessor(J2P);
         Returnvalues ret = new Returnvalues();
         try {
+            // file.getOriginalFilename()
             // OS DEPENDENT: Change when switching from Windows to Linux. ---------------------
             String path = "C:\\Users\\Bruger\\IdeaProjects\\backend_cdio-master\\upload-dir\\";
             //String path = "/home/s172133/upload-dir/";
-            ret = ip.process(path+1+"\\IMG_20210611_124214.jpg");
+            ret = ip.process(path+id+"\\IMG_20210611_124214.jpg");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -197,6 +198,7 @@ public class UploadController {
             System.out.println("Not foundTo");
         }
 
+
         // IMAGE GRAPHICS
         start = System.currentTimeMillis();
         ImageGraphics g = new ImageGraphics();
@@ -210,16 +212,16 @@ public class UploadController {
         System.out.println("Image graphic took: "+elapsedTime+"ms");
 
         // IMAGE COMPRESSION
-        start = System.currentTimeMillis();
+        //start = System.currentTimeMillis();
         ImageCompression compression = new ImageCompression();
         try {
             compression.compress(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        end = System.currentTimeMillis();
-        elapsedTime = end - start;
-        System.out.println("Image compression took: "+elapsedTime+"ms");
+        //end = System.currentTimeMillis();
+        //elapsedTime = end - start;
+        //System.out.println("Image compression took: "+elapsedTime+"ms");
 
         // RESPONSE REGARDING NEXT MOVE
         try {

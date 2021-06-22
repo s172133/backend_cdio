@@ -36,8 +36,7 @@ public class javaToPy {
     private static final String pythonPath = "python";
     private static final String pyProgramPath = "C:\\Users\\Bruger\\Desktop\\Testversion\\Predict.py";
 
-    public javaToPy() throws Exception{ startPy();
-    System.out.println("python started!");}
+    public javaToPy() throws Exception{ startPy();}
 
     /**
      * Send param to Python program. First use is slow, but it speedsup on following requests.

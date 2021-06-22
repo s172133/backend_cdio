@@ -1,8 +1,8 @@
 package com.example.web.ImageProcess;
 
 import com.example.web.Controller.javaToPy;
-import org.opencv.core.*;
 import org.opencv.core.Point;
+import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
@@ -10,18 +10,25 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Billede {
+    public Image billed;
     public ArrayList list;
     private static int bloklist_size = 10;
     List<firkanter> firkanterList = new ArrayList<>();
     List<firkanter> blokList[] = new ArrayList[bloklist_size];
     List<Kort> aceList = new ArrayList<>();
     List<Kort> bunkeList = new ArrayList<>();
-    List<Kort> kortlist = new ArrayList<>();
+    List<Mat> matList = new ArrayList<>();
+    List<Rect> rectList = new ArrayList<>();
+    List <Kort> kortlist = new ArrayList<Kort>();
 
     public Mat IndlæsBillede(String filnavn) {
         Imgcodecs imageCodecs = new Imgcodecs();
