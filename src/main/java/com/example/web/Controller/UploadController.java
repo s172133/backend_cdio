@@ -198,7 +198,6 @@ public class UploadController {
             System.out.println("Not foundTo");
         }
 
-
         // IMAGE GRAPHICS
         start = System.currentTimeMillis();
         ImageGraphics g = new ImageGraphics();
