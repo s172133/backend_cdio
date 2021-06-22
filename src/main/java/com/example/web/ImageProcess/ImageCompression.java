@@ -9,20 +9,30 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+
 public class ImageCompression {
 
     public ImageCompression(){
     }
 
     public void compress(int id) throws Exception{
+        String slash;
+        String path;
+        if (IS_OS_WINDOWS) {
+            // OS DEPENDENT:
+            path = "C:\\Users\\Bruger\\IdeaProjects\\backend_cdio-master\\upload-dir\\";
+            slash = "\\";
+        } else {
+            path = "/home/s172133/upload-dir/";
+            slash = "/";
+        }
 
-        // OS DEPENDENT: Change when switching from Windows to Linux. ---------------------
-        File input = new File("upload-dir\\"+id+"\\return-gui.jpg");
+        File input = new File(path+id+slash+"return-gui.jpg");
         BufferedImage image;
         image = ImageIO.read(input);
 
-        // OS DEPENDENT: Change when switching from Windows to Linux. ---------------------
-        File output = new File("upload-dir\\"+id+"\\optimized-return-gui.jpg");
+        File output = new File(path+id+slash+"optimized-return-gui.jpg");
         OutputStream out;
         out = new FileOutputStream(output);
 

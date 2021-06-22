@@ -9,11 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.example.web.storage.StorageService;
 
-import java.util.ArrayList;
-
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 @RestController
 @RequestMapping(value = "/api/v1/")
@@ -33,7 +31,7 @@ public class UploadController {
     private javaToPy J2P;
 
     // TESTING GET
-    @GetMapping(value="/")
+    @GetMapping(value = "/")
     public String index() {
         return "We received your GET";
     }
@@ -46,7 +44,7 @@ public class UploadController {
 
 
     // STARTING GAME
-    @GetMapping(value="/start")
+    @GetMapping(value = "/start")
     public ResponseEntity<String> startGame() {
 
         int newGame = Game.setID();
@@ -63,7 +61,7 @@ public class UploadController {
     }
 
     // ENDING GAME
-    @GetMapping(value="/end/{id}")
+    @GetMapping(value = "/end/{id}")
     public String endGame(@PathVariable Integer id) {
 
         // DELETE DIRECTORY AND REMOVE FROM HASHMAP
@@ -75,7 +73,7 @@ public class UploadController {
 
 
     // RESTART GAME
-    @GetMapping(value="/restart/{id}")
+    @GetMapping(value = "/restart/{id}")
     public String restartGame(@PathVariable Integer id) {
         Game.resetGame(id);
         return "The game will be restarted";
@@ -83,8 +81,8 @@ public class UploadController {
 
 
     // TEST ALGORITHM
-    @GetMapping(value="/algo/{id}/{input}")
-    public String algoTest(@PathVariable Integer id,@PathVariable String input) {
+    @GetMapping(value = "/algo/{id}/{input}")
+    public String algoTest(@PathVariable Integer id, @PathVariable String input) {
 
         try {
             return Game.get(id).update(input).text;
@@ -95,25 +93,24 @@ public class UploadController {
     }
 
     // GET number of active users
-    @GetMapping(value="/users")
+    @GetMapping(value = "/users")
     public String numUsers() {
 
         int num = Game.numUsers();
 
-        return "Number of players: "+num;
+        return "Number of players: " + num;
     }
 
     // GET number of active users
-    @GetMapping(value="/active")
+    @GetMapping(value = "/active")
     public String activeUsers() {
-
         return Game.Users();
     }
 
 
     // DOWNLOAD IMAGE
     @GetMapping("/download/{id}")
-    public ResponseEntity<Resource> serveFile(@PathVariable int id){
+    public ResponseEntity<Resource> serveFile(@PathVariable int id) {
 
         // LOAD IMAGE AS RESOURCE FOR RETURN
         String filename = "return-gui.jpg";
@@ -139,23 +136,30 @@ public class UploadController {
         ImageProcessor ip = new ImageProcessor(J2P);
         Returnvalues ret = new Returnvalues();
         try {
-            // file.getOriginalFilename()
-            // OS DEPENDENT: Change when switching from Windows to Linux. ---------------------
-            String path = "C:\\Users\\Bruger\\IdeaProjects\\backend_cdio-master\\upload-dir\\";
-            //String path = "/home/s172133/upload-dir/";
-            ret = ip.process(path+id+"\\IMG_20210611_124214.jpg");
+            String path;
+            String slash;
+            if (IS_OS_WINDOWS) {
+                // OS DEPENDENT:
+                slash = "\\";
+                path = "C:\\Users\\Bruger\\IdeaProjects\\backend_cdio-master\\upload-dir\\";
+            } else {
+                path = "/home/s172133/upload-dir/";
+                slash = "/";
+            }
+            System.out.println("    "+path + id + slash + file.getOriginalFilename());
+            ret = ip.process(path + id + slash + file.getOriginalFilename());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         // FEJL HERE: Gme.returnGameArray not initialised when using Peters debug version.
-        for (Kort element: ret.kortList) {
+        for (Kort element : ret.kortList) {
             Game.returnGameArray(id).add(element);
         }
 
         long end = System.currentTimeMillis();
         long elapsedTime = end - start;
-        System.out.println("Image processing took: "+elapsedTime+"ms");
+        System.out.println("Image processing took: " + elapsedTime + "ms");
 
         // ALGORITHM
         String input = ret.Tobias;
@@ -166,32 +170,36 @@ public class UploadController {
             e.printStackTrace();
         }
 
-        // SKAL RETTES
         //  "Træk nye kort."  "Spillet er vundet!"   "Spillet er tabt!"
+        // Hvad med return billede? Hvad skal app'en kigge efter?
+        if (response.text.contains("Træk") || response.text.contains("Spillet")) {
+            return response.text;
+        }
+
         // FIND FROM AND TO CARDS(provided by algorithm)
-        Kort foundFrom = Game.findInBlock(id, response.from.getSuit(),  response.from.getVal());
-        Kort foundTo = Game.findInBlock(id, response.to.getSuit(),  response.to.getVal());
+        Kort foundFrom = Game.findInBlock(id, response.from.getSuit(), response.from.getVal());
+        Kort foundTo = Game.findInBlock(id, response.to.getSuit(), response.to.getVal());
 
         // SET ARROWS
-        String  fromArrow = "";
-        String  toArrow = "";
+        String fromArrow = "";
+        String toArrow = "";
         // IF 'FROM' CARD is EMPTY
-        if(foundFrom != null){
-           System.out.println("We found "+ foundFrom.getCiffer() + foundFrom.getFarve());
-            if(Game.returnGameArray(id).indexOf(foundFrom) <= 6){
+        if (foundFrom != null) {
+            System.out.println("We found " + foundFrom.getCiffer() + foundFrom.getFarve());
+            if (Game.returnGameArray(id).indexOf(foundFrom) <= 6) {
                 fromArrow = "UB";
-            } else{
+            } else {
                 fromArrow = "DB";
             }
         } else {
-           System.out.println("Not foundFrom");
+            System.out.println("Not foundFrom");
         }
         // IF 'TO' CARD is EMPTY
-        if(foundTo != null){
-            System.out.println("We found "+ foundTo.getCiffer() + foundTo.getFarve());
-            if(Game.returnGameArray(id).indexOf(foundTo) <= 6 ){
+        if (foundTo != null) {
+            System.out.println("We found " + foundTo.getCiffer() + foundTo.getFarve());
+            if (Game.returnGameArray(id).indexOf(foundTo) <= 6) {
                 toArrow = "UG";
-            } else{
+            } else {
                 toArrow = "DG";
             }
         } else {
@@ -202,13 +210,13 @@ public class UploadController {
         start = System.currentTimeMillis();
         ImageGraphics g = new ImageGraphics();
         try {
-            g.addString(id,foundFrom,fromArrow,foundTo,toArrow);
-        } catch (Exception e){
+            g.addString(id, foundFrom, fromArrow, foundTo, toArrow, file.getOriginalFilename());
+        } catch (Exception e) {
             e.printStackTrace();
         }
         end = System.currentTimeMillis();
         elapsedTime = end - start;
-        System.out.println("Image graphic took: "+elapsedTime+"ms");
+        System.out.println("Image graphic took: " + elapsedTime + "ms");
 
         // IMAGE COMPRESSION
         //start = System.currentTimeMillis();
@@ -222,18 +230,8 @@ public class UploadController {
         //elapsedTime = end - start;
         //System.out.println("Image compression took: "+elapsedTime+"ms");
 
-        // RESPONSE REGARDING NEXT MOVE
-        try {
-            System.out.println(Game.get(id).update(input).text);
-            return Game.get(id).update(input).text;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "fejl!";
-        }
+        return response.text;
     }
-
-
-
 
 
     // UPLOAD TEST IMAGES

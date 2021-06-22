@@ -21,6 +21,7 @@ package com.example.web.Controller;
  */
 
 import org.springframework.stereotype.Service;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import java.io.*;
 
@@ -29,14 +30,21 @@ public class javaToPy {
     public static BufferedReader inp;
     public static BufferedWriter out;
     public static Process py;
+    private static String pythonPath;
+    private static String pyProgramPath;
+    private static String slash;
 
-    // OS DEPENDENT: Change when switching from Windows to Linux. ---------------------
-    //private static final String pythonPath = "/home/s195170/anaconda3/envs/tensorflow/bin/python";
-    //private static final String pyProgramPath = "/home/s195170/Testversion/Predict.py";
-    private static final String pythonPath = "python";
-    private static final String pyProgramPath = "C:\\Users\\Bruger\\Desktop\\Testversion\\Predict.py";
-
-    public javaToPy() throws Exception{ startPy();}
+    public javaToPy() throws Exception{
+        if (IS_OS_WINDOWS) {
+            // OS DEPENDENT:
+            pythonPath = "python";
+            pyProgramPath = "C:\\Users\\Bruger\\Desktop\\Testversion\\Predict.py";
+        } else {
+            pythonPath = "/home/s195170/anaconda3/envs/tensorflow/bin/python";
+            pyProgramPath = "/home/s195170/Testversion/Predict.py";
+        }
+        startPy();
+    }
 
     /**
      * Send param to Python program. First use is slow, but it speedsup on following requests.
