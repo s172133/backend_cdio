@@ -19,19 +19,17 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Billede {
-    public Image billed;
     public ArrayList list;
     private static int bloklist_size = 10;
     List<firkanter> firkanterList = new ArrayList<>();
     List<firkanter> blokList[] = new ArrayList[bloklist_size];
     List<Kort> aceList = new ArrayList<>();
     List<Kort> bunkeList = new ArrayList<>();
-    List<Mat> matList = new ArrayList<>();
-    List<Rect> rectList = new ArrayList<>();
-    List <Kort> kortlist = new ArrayList<Kort>();
+    List <Kort> kortlist = new ArrayList<>();
 
     public Mat IndlæsBillede(String filnavn) {
         Imgcodecs imageCodecs = new Imgcodecs();
+
         return imageCodecs.imread(filnavn, Imgcodecs.IMREAD_COLOR);
     }
 
