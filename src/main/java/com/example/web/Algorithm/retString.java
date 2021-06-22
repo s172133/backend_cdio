@@ -1,4 +1,8 @@
 package com.example.web.Algorithm;
+/**
+ * Name: Tobias Schwarze
+ * Nr.: s195170
+ */
 
 public class retString {
     public String text;

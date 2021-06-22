@@ -14,33 +14,21 @@ public class ImageCompression {
     public ImageCompression(){
     }
 
-    public void compress(int id) {
+    public void compress(int id) throws Exception{
 
-        File input = new File("upload-dir/"+id+"/return.jpg");
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(input);
-        } catch (
-                IOException e) {
-            e.printStackTrace();
-        }
+        // OS DEPENDENT: Change when switching from Windows to Linux. ---------------------
+        File input = new File("upload-dir\\"+id+"\\return-gui.jpg");
+        BufferedImage image;
+        image = ImageIO.read(input);
 
-        File output = new File("upload-dir/"+id+"/optimized-return.jpg");
-        OutputStream out = null;
-        try {
-            out = new FileOutputStream(output);
-        } catch (
-                FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        // OS DEPENDENT: Change when switching from Windows to Linux. ---------------------
+        File output = new File("upload-dir\\"+id+"\\optimized-return-gui.jpg");
+        OutputStream out;
+        out = new FileOutputStream(output);
 
         ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
-        ImageOutputStream ios = null;
-        try {
-            ios = ImageIO.createImageOutputStream(out);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ImageOutputStream ios;
+        ios = ImageIO.createImageOutputStream(out);
         writer.setOutput(ios);
 
         ImageWriteParam param = writer.getDefaultWriteParam();
@@ -49,18 +37,10 @@ public class ImageCompression {
             param.setCompressionQuality(0.4f);
         }
 
-        try {
-            writer.write(null, new IIOImage(image, null, null), param);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        writer.write(null, new IIOImage(image, null, null), param);
 
-        try {
-            out.close();
-            ios.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        out.close();
+        ios.close();
 
         writer.dispose();
     }

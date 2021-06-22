@@ -1,4 +1,8 @@
 package com.example.web.Algorithm;
+/*
+ * Name: Tobias Schwarze
+ * Nr.: s195170
+ */
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -139,26 +139,22 @@ public class UploadController {
         ImageProcessor ip = new ImageProcessor(J2P);
         Returnvalues ret = new Returnvalues();
         try {
-            //String path = "C:\\Users\\Bruger\\IdeaProjects\\backend_cdio-master\\upload-dir\\";
-            String path = "/home/s172133/upload-dir/";
-            ret = ip.process(path+1+"/IMG_20210611_124214.jpg");
+            // OS DEPENDENT: Change when switching from Windows to Linux. ---------------------
+            String path = "C:\\Users\\Bruger\\IdeaProjects\\backend_cdio-master\\upload-dir\\";
+            //String path = "/home/s172133/upload-dir/";
+            ret = ip.process(path+1+"\\IMG_20210611_124214.jpg");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        System.out.println("    "+ret.kortList);
         // FEJL HERE: Gme.returnGameArray not initialised when using Peters debug version.
         for (Kort element: ret.kortList) {
             Game.returnGameArray(id).add(element);
-            System.out.println("    "+ element.toString());
         }
-
 
         long end = System.currentTimeMillis();
         long elapsedTime = end - start;
         System.out.println("Image processing took: "+elapsedTime+"ms");
-
-
 
         // ALGORITHM
         String input = ret.Tobias;
@@ -169,57 +165,49 @@ public class UploadController {
             e.printStackTrace();
         }
 
-
         // SKAL RETTES
         //  "Træk nye kort."  "Spillet er vundet!"   "Spillet er tabt!"
-
-
         // FIND FROM AND TO CARDS(provided by algorithm)
-        Kort foundFrom = Game.findInBlock(id, response.from.getColor(),  response.from.getVal());
-        Kort foundTo = Game.findInBlock(id, response.to.getColor(),  response.to.getVal());
-
-        // IF 'FROM' CARD is EMPTY
-        if(foundFrom != null){
-           System.out.println("We found "+ foundFrom.getCiffer() + foundFrom.getFarve());
-        } else {
-           System.out.println("Not foundFrom");
-        }
-
-        // IF 'TO' CARD is EMPTY
-        if(foundTo != null){
-            System.out.println("We found "+ foundTo.getCiffer() + foundTo.getFarve());
-        } else {
-            System.out.println("Not foundTo");
-        }
-
-
+        Kort foundFrom = Game.findInBlock(id, response.from.getSuit(),  response.from.getVal());
+        Kort foundTo = Game.findInBlock(id, response.to.getSuit(),  response.to.getVal());
 
         // SET ARROWS
         String  fromArrow = "";
         String  toArrow = "";
-        ArrayList<Kort> find = Game.returnGameArray(id);
-
-        if(find.indexOf(foundFrom) <= 6){
-            fromArrow = "UB";
-        } else{
-            fromArrow = "DB";
+        // IF 'FROM' CARD is EMPTY
+        if(foundFrom != null){
+           System.out.println("We found "+ foundFrom.getCiffer() + foundFrom.getFarve());
+            if(Game.returnGameArray(id).indexOf(foundFrom) <= 6){
+                fromArrow = "UB";
+            } else{
+                fromArrow = "DB";
+            }
+        } else {
+           System.out.println("Not foundFrom");
         }
-        if(find.indexOf(foundTo) <= 6 ){
-            toArrow = "UG";
-        } else{
-            toArrow = "DG";
+        // IF 'TO' CARD is EMPTY
+        if(foundTo != null){
+            System.out.println("We found "+ foundTo.getCiffer() + foundTo.getFarve());
+            if(Game.returnGameArray(id).indexOf(foundTo) <= 6 ){
+                toArrow = "UG";
+            } else{
+                toArrow = "DG";
+            }
+        } else {
+            System.out.println("Not foundTo");
         }
 
         // IMAGE GRAPHICS
         start = System.currentTimeMillis();
-
-            ImageGraphics g = new ImageGraphics();
+        ImageGraphics g = new ImageGraphics();
+        try {
             g.addString(id,foundFrom,fromArrow,foundTo,toArrow);
-
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         end = System.currentTimeMillis();
         elapsedTime = end - start;
         System.out.println("Image graphic took: "+elapsedTime+"ms");
-
 
         // IMAGE COMPRESSION
         start = System.currentTimeMillis();
@@ -232,9 +220,6 @@ public class UploadController {
         end = System.currentTimeMillis();
         elapsedTime = end - start;
         System.out.println("Image compression took: "+elapsedTime+"ms");
-
-
-
 
         // RESPONSE REGARDING NEXT MOVE
         try {

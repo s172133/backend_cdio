@@ -31,13 +31,11 @@ public class StatefulGame{
     }
 
 
-    public synchronized Kort findInBlock(int id, char color, int Value){
+    public synchronized Kort findInBlock(int id, char suit, int value){
         ArrayList<Kort> find = gameData.get(id);
 
-        for (Kort kort : find
-             ) {
-            if(kort.getCiffer() == Value && kort.getFarve() == color) {
-                System.out.println(find.indexOf(kort));
+        for (Kort kort : find ) {
+            if(kort.getCiffer() == value && kort.getFarve() == suit) {
                 return kort;
             }
         }

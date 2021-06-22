@@ -86,4 +86,9 @@ public class Kort {
     public void setSøjle(int søjle) {
         this.søjle = søjle;
     }
+
+    @Override
+    public String toString(){
+        return "[" + ciffer + "," + farve + "]";
+    }
 }
