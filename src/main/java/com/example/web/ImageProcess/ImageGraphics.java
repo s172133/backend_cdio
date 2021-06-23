@@ -33,8 +33,8 @@ public class ImageGraphics {
         String slash;
         if (IS_OS_WINDOWS) {
             // OS DEPENDENT:
-            img_path = "C:\\Users\\Bruger\\IdeaProjects\\backend_cdio-master\\upload-dir\\";
-            arrowPath = "C:\\Users\\Bruger\\IdeaProjects\\backend_cdio-master\\testing\\";
+            img_path = "C:\\Users\\tobias\\IdeaProjects\\backend_cdio\\upload-dir\\";
+            arrowPath = "C:\\Users\\tobias\\IdeaProjects\\backend_cdio\\testing\\";
             slash = "\\";
         } else {
             img_path = "/home/s195170/upload-dir/";
@@ -52,21 +52,21 @@ public class ImageGraphics {
             System.out.println("    "+fromCenterCard);
             System.out.println("    "+(coorFrom.getSlutxval() - coorFrom.getStartxval()));
             System.out.println("    "+(coorFrom.getSlutyval() - coorFrom.getStartyval()));
-            System.out.println("    "+iHeight+ "  " +iHeight);
+            System.out.println("    "+iHeight+ "  " +iWidth);
             switch (fromArrow) {
                 case "UB":
                     arrowOne = new File(arrowPath + "arrowupblue.png");
-                    yFrom = (iWidth - iWidth/10);
+                    yFrom = (iHeight - iHeight/8);
                     break;
                 case "DB":
                     arrowOne = new File(arrowPath + "arrowdownblue.png");
-                    yFrom = (iWidth/10);
+                    yFrom = (iHeight/8);
                     break;
                 default:
             }
             gOne = ImageIO.read(arrowOne);
             xFromArrow = fromCenterCard - (gOne.getWidth() / 2);
-            g.drawImage(gOne, yFrom, xFromArrow, null);
+            g.drawImage(gOne, xFromArrow,yFrom, null);
         }
         if (coorTo != null) {
             toCenterCard = coorTo.getSlutxval() - ((coorTo.getSlutxval() - coorTo.getStartxval()) / 2);
@@ -74,17 +74,17 @@ public class ImageGraphics {
             switch (toArrow) {
                 case "UG":
                     arrowTwo = new File(arrowPath + "arrowupgreen.png");
-                    yTo = (iWidth - iWidth/10);
+                    yTo = (iHeight - iHeight/8);
                     break;
                 case "DG":
                     arrowTwo = new File(arrowPath + "arrowdowngreen.png");
-                    yTo = (iWidth/10);
+                    yTo = (iHeight/8);
                     break;
                 default:
             }
             gTwo = ImageIO.read(arrowTwo);
             xToArrow= toCenterCard - (gTwo.getWidth() / 2);
-            g.drawImage(gTwo, yTo,xToArrow, null);
+            g.drawImage(gTwo, xToArrow,yTo, null);
         }
 
         // CREATE NEW FILE

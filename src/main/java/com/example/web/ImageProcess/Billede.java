@@ -68,7 +68,6 @@ public class Billede {
                     Imgproc.rectangle(bil, new Point(rec.x, rec.y), new Point(rec.x + rec.width, rec.y + rec.height), new Scalar(0, 0, 255));
                     Mat ROI = bil.submat(rec.y, rec.y + rec.height, rec.x, rec.x + rec.width);
                     firkanter temp = new firkanter(rec.x, rec.y, rec.width, rec.height, ROI);
-                    System.out.println("    " + temp.længde);
                     if (temp.længde < 500 && temp.længde > 100) {
                         firkanterList.add(temp);
                         Imgproc.drawContours(drawing, contour, i, new Scalar(255, 255, 255), -1);
@@ -77,10 +76,6 @@ public class Billede {
                     //TODO AREA på 50 og height på 20 funker når bil er i lav kval med sort bg VIGTIGT MED afstand til resten af bunken
                 }
             }
-        }
-        System.out.println("firkant size = "+firkanterList.size());
-        for (int i = 0; i <firkanterList.size() ; i++) {
-            System.out.println("   Fs"+firkanterList.get(i).startxval);
         }
         GemBillede(drawing, "cont.jpg");
     }

@@ -21,7 +21,7 @@ public class ImageCompression {
         String path;
         if (IS_OS_WINDOWS) {
             // OS DEPENDENT:
-            path = "C:\\Users\\Bruger\\IdeaProjects\\backend_cdio-master\\upload-dir\\";
+            path = "C:\\Users\\tobias\\IdeaProjects\\backend_cdio\\upload-dir\\";
             slash = "\\";
         } else {
             path = "/home/s195170/upload-dir/";

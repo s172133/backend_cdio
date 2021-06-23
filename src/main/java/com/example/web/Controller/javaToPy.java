@@ -37,7 +37,7 @@ public class javaToPy {
         if (IS_OS_WINDOWS) {
             // OS DEPENDENT:
             pythonPath = "python";
-            pyProgramPath = "C:\\Users\\Bruger\\Desktop\\Testversion\\Predict.py";
+            pyProgramPath = "C:\\Users\\tobias\\Downloads\\Testversion\\Predict.py";
         } else {
             pythonPath = "/home/s195170/anaconda3/envs/tensorflow/bin/python";
             pyProgramPath = "/home/s195170/Testversion/Predict.py";

@@ -33,7 +33,7 @@ public class ImageProcessor {
          //Core.rotate(mat, mat, Core.ROTATE_90_COUNTERCLOCKWISE);
 
         //lav et kantfilter på billedet
-        Mat canmat = img.cannyBillede(mat,63,160,1);
+        Mat canmat = img.cannyBillede(mat,33,100,1);
         //udskriver billedet(brugt til test
 
         //find firkanter i billedet med areal på 500 og en højde på 200 alt mindre bliver ignoeret

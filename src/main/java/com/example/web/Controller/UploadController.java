@@ -141,7 +141,7 @@ public class UploadController {
             if (IS_OS_WINDOWS) {
                 // OS DEPENDENT:
                 slash = "\\";
-                path = "C:\\Users\\Bruger\\IdeaProjects\\backend_cdio-master\\upload-dir\\";
+                path = "C:\\Users\\tobias\\IdeaProjects\\backend_cdio\\upload-dir\\";
             } else {
                 path = "/home/s195170/upload-dir/";
                 slash = "/";
