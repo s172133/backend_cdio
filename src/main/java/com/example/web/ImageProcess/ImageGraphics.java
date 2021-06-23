@@ -48,38 +48,43 @@ public class ImageGraphics {
         int iWidth = image.getWidth();
 
         if (coorFrom != null){
-            fromCenterCard = coorFrom.getSlutxval() + ((coorFrom.getSlutxval() - coorFrom.getStartxval()) / 2);
+            fromCenterCard = coorFrom.getSlutxval() - ((coorFrom.getSlutxval() - coorFrom.getStartxval()) / 2);
+            System.out.println("    "+fromCenterCard);
+            System.out.println("    "+(coorFrom.getSlutxval() - coorFrom.getStartxval()));
+            System.out.println("    "+(coorFrom.getSlutyval() - coorFrom.getStartyval()));
+            System.out.println("    "+iHeight+ "  " +iHeight);
             switch (fromArrow) {
                 case "UB":
                     arrowOne = new File(arrowPath + "arrowupblue.png");
-                    yFrom = (iHeight - 150);
+                    yFrom = (iWidth - iWidth/10);
                     break;
                 case "DB":
                     arrowOne = new File(arrowPath + "arrowdownblue.png");
-                    yFrom = (15);
+                    yFrom = (iWidth/10);
                     break;
                 default:
             }
             gOne = ImageIO.read(arrowOne);
             xFromArrow = fromCenterCard - (gOne.getWidth() / 2);
-            g.drawImage(gOne, xFromArrow, yFrom, null);
+            g.drawImage(gOne, yFrom, xFromArrow, null);
         }
         if (coorTo != null) {
-            toCenterCard = coorTo.getSlutxval() + ((coorTo.getSlutxval() - coorTo.getStartxval()) / 2);
+            toCenterCard = coorTo.getSlutxval() - ((coorTo.getSlutxval() - coorTo.getStartxval()) / 2);
+            System.out.println("    "+toCenterCard);
             switch (toArrow) {
                 case "UG":
                     arrowTwo = new File(arrowPath + "arrowupgreen.png");
-                    yTo = (iHeight - 150);
+                    yTo = (iWidth - iWidth/10);
                     break;
                 case "DG":
                     arrowTwo = new File(arrowPath + "arrowdowngreen.png");
-                    yTo = (15);
+                    yTo = (iWidth/10);
                     break;
                 default:
             }
             gTwo = ImageIO.read(arrowTwo);
             xToArrow= toCenterCard - (gTwo.getWidth() / 2);
-            g.drawImage(gTwo, xToArrow, yTo, null);
+            g.drawImage(gTwo, yTo,xToArrow, null);
         }
 
         // CREATE NEW FILE

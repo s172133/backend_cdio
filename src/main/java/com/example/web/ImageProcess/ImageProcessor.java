@@ -2,6 +2,9 @@ package com.example.web.ImageProcess;
 
 import com.example.web.Controller.javaToPy;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,18 +27,22 @@ public class ImageProcessor {
 
         //FØLGENDE SKAL ÆNDRES
         Mat mat = img.IndlæsBillede(image);
-        //Core.rotate(mat, mat, Core.ROTATE_90_COUNTERCLOCKWISE);
+
+        System.out.println("    S:"+mat.size());
+
+         //Core.rotate(mat, mat, Core.ROTATE_90_COUNTERCLOCKWISE);
+
         //lav et kantfilter på billedet
-        Mat canmat = img.cannyBillede(mat,33,100,1);
+        Mat canmat = img.cannyBillede(mat,63,160,1);
         //udskriver billedet(brugt til test
 
         //find firkanter i billedet med areal på 500 og en højde på 200 alt mindre bliver ignoeret
-        img.find4(canmat,mat,300,200);
+        img.find4(canmat,mat,4000,150);
 
         //firkanter ligges i en liste som herefter bliver sat i søjler, så hver bloklist er en søjle på banen
 
         //Sorterer billederne i felter
-        img.firkanterTilBlocklister();
+        img.firkanterTilBlocklister(mat);
 
         //sorterer så det nederste kort i en række er det første kort i listen
         img.sorterFirkanter(img.blokList);
@@ -102,8 +109,10 @@ public class ImageProcessor {
                             tempmat = img.blokList[val].get(tempo).Billede;
                         }
                     if(img.blokList[val].size() != 0) {
-                        if (img.blokList[val].get(0).højde > 275) {
-                            tempmat = tempmat.submat(tempmat.rows() - 275, tempmat.rows(), 0, tempmat.cols());
+                        double skæring =  (mat.rows()/4.2);
+                        int intskær = (int) skæring;
+                        if (img.blokList[val].get(0).højde > intskær) {
+                            tempmat = tempmat.submat(tempmat.rows() - intskær, tempmat.rows(), 0, tempmat.cols());
                         }
                         Kort kort = new Kort(img.blokList[val].get(0).startxval, img.blokList[val].get(0).startyval, img.blokList[val].get(0).slutxval, img.blokList[val].get(0).slutyval, val, 1);
                         svar += img.IDKort(tempmat, kort,J2Pfinal);

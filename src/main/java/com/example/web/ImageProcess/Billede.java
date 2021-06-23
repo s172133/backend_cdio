@@ -3,6 +3,7 @@ package com.example.web.ImageProcess;
 import com.example.web.Controller.javaToPy;
 import org.opencv.core.Point;
 import org.opencv.core.*;
+import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
@@ -25,12 +26,13 @@ public class Billede {
     List<firkanter> blokList[] = new ArrayList[bloklist_size];
     List<Kort> aceList = new ArrayList<>();
     List<Kort> bunkeList = new ArrayList<>();
-    List <Kort> kortlist = new ArrayList<>();
+    List<Kort> kortlist = new ArrayList<>();
+    Mat img;
 
     public Mat IndlæsBillede(String filnavn) {
         Imgcodecs imageCodecs = new Imgcodecs();
-
-        return imageCodecs.imread(filnavn, Imgcodecs.IMREAD_COLOR);
+        img = imageCodecs.imread(filnavn, Imgcodecs.IMREAD_COLOR);
+        return img;
     }
 
     public void GemBillede(Mat billede, String filnavn) {
@@ -41,37 +43,46 @@ public class Billede {
     public Mat cannyBillede(Mat matrix, int thresh1, int thresh2, int cond) {
 
         Mat canny = new Mat();
-        Imgproc.Canny(matrix, canny, thresh1, thresh2, 3, false);
+        Mat blur = new Mat();
+        Imgproc.GaussianBlur(matrix, blur, new Size(3, 3), 3, 3);
+        Imgproc.Canny(blur, canny, thresh1, thresh2, 3, false);
         if (cond == 1) {
-            Imgproc.dilate(canny, canny, new Mat(), new Point(-1, -1), 1, 1, new Scalar(0.01));
+            Imgproc.dilate(canny, canny, new Mat(), new Point(-1, -1), 1, 1, new Scalar(1));
         }
+        GemBillede(canny, "canny.jpg");
         return canny;
     }
 
     public void find4(Mat matrix, Mat bil, int area, int height) {
         Mat thresh = new Mat();
+        Mat contImg = new Mat(img.size(), img.type());
         List<MatOfPoint> contour = new ArrayList<>();
         //Imgproc.threshold(matrix,thresh,255,0,0);
-        Mat test = new Mat();
         Imgproc.findContours(matrix, contour, thresh, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_NONE);
+
         Mat drawing = new Mat(matrix.size(), matrix.type());
-        Rect rect_min = new Rect();
         for (int i = 0; i < contour.size(); i++) {
-            Imgproc.drawContours(drawing, contour, i, new Scalar(255, 255, 255), -1);
             if (Imgproc.contourArea(contour.get(i)) > area) {
                 Rect rec = Imgproc.boundingRect((contour.get(i)));
                 if (rec.height > height) {
                     Imgproc.rectangle(bil, new Point(rec.x, rec.y), new Point(rec.x + rec.width, rec.y + rec.height), new Scalar(0, 0, 255));
                     Mat ROI = bil.submat(rec.y, rec.y + rec.height, rec.x, rec.x + rec.width);
                     firkanter temp = new firkanter(rec.x, rec.y, rec.width, rec.height, ROI);
-                    if (temp.længde < 300 && temp.længde > 100) {
+                    System.out.println("    " + temp.længde);
+                    if (temp.længde < 500 && temp.længde > 100) {
                         firkanterList.add(temp);
+                        Imgproc.drawContours(drawing, contour, i, new Scalar(255, 255, 255), -1);
                     }
                     //TODO area på 50 og height på 24 kan godt når billede er i full HD!!! 500 area 200 højde funker med sort bg og hd
                     //TODO AREA på 50 og height på 20 funker når bil er i lav kval med sort bg VIGTIGT MED afstand til resten af bunken
                 }
             }
         }
+        System.out.println("firkant size = "+firkanterList.size());
+        for (int i = 0; i <firkanterList.size() ; i++) {
+            System.out.println("   Fs"+firkanterList.get(i).startxval);
+        }
+        GemBillede(drawing, "cont.jpg");
     }
 
     public void sorterFirkanter(List[] temp) {
@@ -80,17 +91,19 @@ public class Billede {
         }
     }
 
-    public void firkanterTilBlocklister() {
+    public void firkanterTilBlocklister(Mat mat) {
         Collections.sort(this.firkanterList, Comparator.comparingInt(firkanter::getStartxval));
-        int margin = 150;
+        int margin = firkanterList.get(0).længde;
+
+        int startxmargin = mat.cols() / 20;
         int blokid = 1;
-        int længde = 0;
+        int længde = margin;
         //block er ikke i 1
-        if (this.firkanterList.get(0).startxval > 150) {
+        if (this.firkanterList.get(0).startxval > mat.cols()/10) {
             do {
                 blokid++;
                 //længde er ca. længde på en block, når denne længde er større end startværdien for første bunke har vi dens block
-                længde += firkanterList.get(0).længde + 50;
+                længde += margin;
             } while (this.firkanterList.get(0).startxval > længde);
         }
 
@@ -113,16 +126,14 @@ public class Billede {
             //  }
             // else {
             //hvis den nuværendes startx er større end den næste - margin samt at den næstes startx + margin er større end nuværendes start x, så er der et kort i denne bunke
-            if (this.firkanterList.get(i).startyval < 300) {
+            if (this.firkanterList.get(i).startyval < mat.rows()/4) {
+
                 //  aceList.add(firkanterList.get(i));
             }
 
             if (this.firkanterList.get(i).getStartxval() > this.firkanterList.get(i + 1).getStartxval() - margin && this.firkanterList.get(i).getStartxval() < this.firkanterList.get(i + 1).getStartxval() + margin) {
-
                 firkanterList.get(i + 1).setBlokid(firkanterList.get(i).getBlokid());
                 blokList[blokid].add(firkanterList.get(i + 1));
-
-
             } else {
                 //hvis næste startx værdi er større end længden på et kort + det løse, så må bunken være tom if statem
                 int j = i - 1;
@@ -138,7 +149,7 @@ public class Billede {
                     if (j + 1 >= firkanterList.size()) {
                         break;
                     }
-                } while (this.firkanterList.get(j + 1).startxval > firkanterList.get(j).længde + this.firkanterList.get(j).startxval + 130);
+                } while (this.firkanterList.get(j + 1).startxval > firkanterList.get(j).længde + this.firkanterList.get(j).startxval + margin);
 
                 // blokid++;
                 firkanterList.get(i + 1).setBlokid(firkanterList.get(i).getBlokid());
@@ -146,8 +157,6 @@ public class Billede {
             }
             //}
         }
-
-
     }
 
     public int findLavesteKort(int blokid) {
@@ -248,11 +257,8 @@ public class Billede {
                 break;
         }
 
-
         //gennemgå kulørlist og skriv de to firkanter længst til venstre (lavest x-værdi?) skal genkendes og den øverste skal
-
         this.GemBillede(ktemp.Billede, "C:/Users/krist/Code/IdeaProjects/FindFirkanter/src/com/company/ciffer.jpg");
-
         //pyth.runpython("2","ciffer.jpg");
         String ciffer = "A";
         char tal = ciffer.charAt(0);
@@ -265,7 +271,6 @@ public class Billede {
     }
 
     public void find4manuel(Mat udklip, Kort kort, javaToPy coms) throws Exception {
-
         pythoncall pyth = new pythoncall();
         this.GemBillede(udklip, "udklip.jpg");
         String kolor = pyth.runpython(1, coms);
@@ -285,7 +290,7 @@ public class Billede {
                 break;
         }
         float percent = Float.parseFloat(far[1]);
-        if (percent <= 60) {
+        if (percent <= 10) {
             throw new Exception("PercentageError");
         }
 
@@ -314,10 +319,10 @@ public class Billede {
         }
         kort.ciffer = tal;
         float ciff = Float.parseFloat(split[1]);
-        if (ciff < 60) {
+        if (ciff < 10) {
             throw new Exception("PercentageError");
         }
-        System.out.println("    Model: "+ciffre+" - "+kolor);
+        System.out.println("    Model: " + ciffre + " - " + kolor);
     }
 
     public String IDKort(Mat billede, Kort kort, javaToPy coms) throws Exception {

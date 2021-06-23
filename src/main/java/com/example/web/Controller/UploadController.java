@@ -115,7 +115,7 @@ public class UploadController {
         // LOAD IMAGE AS RESOURCE FOR RETURN
         String filename = "return-gui.jpg";
         Resource file = storageService.loadAsResource(filename, id);
-
+        System.out.println("    SENDT RET:");
         return ResponseEntity.ok().
                 contentType(MediaType.IMAGE_JPEG).
                 body(file);
@@ -146,9 +146,13 @@ public class UploadController {
                 path = "/home/s195170/upload-dir/";
                 slash = "/";
             }
+            System.out.println(path + id + slash + file.getOriginalFilename());
             ret = ip.process(path + id + slash + file.getOriginalFilename());
+            System.out.println("   Up: "+ret.Tobias);
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("   bad_image");
+            return "bad_image";
         }
 
         // FEJL HERE: Gme.returnGameArray not initialised when using Peters debug version.
@@ -219,16 +223,17 @@ public class UploadController {
 
         // IMAGE COMPRESSION
         //start = System.currentTimeMillis();
-        ImageCompression compression = new ImageCompression();
+        /*ImageCompression compression = new ImageCompression();
         try {
             compression.compress(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
         //end = System.currentTimeMillis();
         //elapsedTime = end - start;
         //System.out.println("Image compression took: "+elapsedTime+"ms");
-
+        System.out.println("    "+response.text);
         return response.text;
     }
 
