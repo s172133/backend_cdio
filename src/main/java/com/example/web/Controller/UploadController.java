@@ -146,29 +146,32 @@ public class UploadController {
                 path = "/home/s195170/upload-dir/";
                 slash = "/";
             }
-            System.out.println(path + id + slash + file.getOriginalFilename());
+
+            // image detection process
             ret = ip.process(path + id + slash + file.getOriginalFilename());
-            System.out.println("   Up: "+ret.Tobias);
+
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("   bad_image");
             return "bad_image";
         }
-
-        // FEJL HERE: Gme.returnGameArray not initialised when using Peters debug version.
+        // Tilføj kort til arraylist
         for (Kort element : ret.kortList) {
             Game.returnGameArray(id).add(element);
         }
-
         long end = System.currentTimeMillis();
         long elapsedTime = end - start;
         System.out.println("Image processing took: " + elapsedTime + "ms");
 
+        // RETTELSE AF OUTPUT FRA IMAGE DETECTION
+        KasperFunc kasper = new KasperFunc();
+        String correctString = kasper.kasper(ret.Tobias);
+        kasper.kasperSet(Game.returnGameArray(id),correctString);
+        
         // ALGORITHM
-        String input = ret.Tobias;
         retString response = null;
         try {
-            response = Game.get(id).update(input);
+            response = Game.get(id).update(correctString);
         } catch (Exception e) {
             e.printStackTrace();
         }
